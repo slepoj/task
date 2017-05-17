@@ -41,13 +41,17 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.singUp:
+                if (isEmailValid(emailUp.getText())){
                 //sometext.setText("button 1");
                 Toast toast =Toast.makeText(Screen2Activity.this, "11", Toast.LENGTH_LONG);
                 toast.show();
                 Intent intent = new Intent(this, Screen1Activity.class);
                 startActivity(intent);
-                break;
+                break;}
             default: break;
         }
+    }
+    boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }
