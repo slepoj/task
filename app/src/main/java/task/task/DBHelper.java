@@ -23,7 +23,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 + "id integer primary key autoincrement,"
                 + "email text,"
                 + "password text, "
-                + "flag integer,"+ ");");
+                + "flag integer"+ ");");
     }
 
     @Override
