@@ -69,8 +69,8 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
 
         switch (v.getId()) {
             case R.id.singUp:
-                if (isEmailValid(emailUp.getText())) {
-                    if (password.equals(reppassword)) {
+                if (isEmailValid(emailUp.getText()) && email.length()>=6) {
+                    if (password.equals(reppassword) && password.length()>=4) {
                         Log.d(LOG_TAG, "--- Insert in mytable: ---");
                         cv.put("email",email);
                         cv.put("password",HexMd5.md5Custom(password));
