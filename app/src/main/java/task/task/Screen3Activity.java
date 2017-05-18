@@ -21,6 +21,7 @@ public class Screen3Activity extends AppCompatActivity implements View.OnClickLi
 
         goOut = (Button) findViewById(R.id.exit);
         information = (TextView) findViewById(R.id.info);
+        information.setText("You e-mail is\n"+DBHelper.getEmail()+"\n"+"Have fun :)");
 
         goOut.setOnClickListener(this);
 
@@ -31,9 +32,6 @@ public class Screen3Activity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.exit:
-                //sometext.setText("button 1");
-                Toast toast = Toast.makeText(Screen3Activity.this, "11", Toast.LENGTH_LONG);
-                toast.show();
                 Intent intent = new Intent(this, Screen1Activity.class);
                 startActivity(intent);
                 break;

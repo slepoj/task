@@ -1,9 +1,13 @@
 package task.task;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +22,9 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
     private TextInputLayout textInputLayoutPassword;
     private EditText email;
     private EditText password;
+    DBHelper dbHelper;
+
+    final String LOG_TAG = "myLogs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,20 +40,65 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
 
         in.setOnClickListener(this);
         up.setOnClickListener(this);
+
+        dbHelper = new DBHelper(this);
     }
 
     @Override
     public void onClick(View v){
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // создаем объект для данных
+        //ContentValues cv = new ContentValues();
+
+        String em = email.getText().toString();
+        String pass = password.getText().toString();
+        boolean error = true;
+
         switch (v.getId()){
             case R.id.button:
-                //sometext.setText("button 1");
-                Toast toast =Toast.makeText(Screen1Activity.this, "11", Toast.LENGTH_LONG);
-                toast.show();
-                Intent intent = new Intent(this, Screen3Activity.class);
-                startActivity(intent);
+                // делаем запрос всех данных из таблицы mytable, получаем Cursor
+                Cursor c = db.query("mytable", null, null, null, null, null, null);
+                // ставим позицию курсора на первую строку выборки
+                // если в выборке нет строк, вернется false
+                if (c.moveToFirst()) {
+                    // определяем номера столбцов по имени в выборке
+                    int idColIndex = c.getColumnIndex("id");
+                    int emailColIndex = c.getColumnIndex("email");
+                    int passwordColIndex = c.getColumnIndex("password");
+                    int flagColIndex = c.getColumnIndex("flag");
+                    do {
+                        Log.d(LOG_TAG, em + "  "+ c.getString(emailColIndex));
+                        if (em.equals(c.getString(emailColIndex))){
+                            if (HexMd5.md5Custom(pass).equals(c.getString(passwordColIndex))){
+                                DBHelper.setEmail(em);
+                                Intent intent = new Intent(this, Screen3Activity.class);
+                                startActivity(intent);
+                                error = false;
+                                break;
+                            } else {
+                                Toast toast =Toast.makeText(Screen1Activity.this, "Password is incorrect", Toast.LENGTH_LONG);
+                                toast.show();
+                                error = false;
+                                break;
+                            }
+                        }
+                        // переход на следующую строку
+                        // а если следующей нет (текущая - последняя), то false - выходим из цикла
+                    } while (c.moveToNext());
+                } else{
+                    Toast toast =Toast.makeText(Screen1Activity.this, "BD is null", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+                if (error){
+                    Toast toast =Toast.makeText(Screen1Activity.this, "This email is not registered", Toast.LENGTH_LONG);
+                    toast.show();
+                    error = true;
+                }
+                c.close();
                 break;
             case R.id.button2:
-                //sometext.setText("button 2");
                 Intent intent2 = new Intent(this, Screen2Activity.class);
                 startActivity(intent2);
                 break;
