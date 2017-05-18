@@ -79,11 +79,11 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
                         Intent intent = new Intent(this, Screen1Activity.class);
                         startActivity(intent);
                     } else{
-                        toast = Toast.makeText(Screen2Activity.this, "not-real email", Toast.LENGTH_LONG);
+                        toast = Toast.makeText(Screen2Activity.this, "Passwords do not match", Toast.LENGTH_LONG);
                         toast.show();
                     }
                 } else {
-                    toast = Toast.makeText(Screen2Activity.this, "passwords do not match", Toast.LENGTH_LONG);
+                    toast = Toast.makeText(Screen2Activity.this, "Not-real email", Toast.LENGTH_LONG);
                     toast.show();
                 }
                 break;
