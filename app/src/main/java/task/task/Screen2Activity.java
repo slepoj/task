@@ -32,6 +32,7 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
     private EditText repPasswordUp;
     DBHelper dbHelper;
     Toast toast;
+    int f=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,8 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
                         Log.d(LOG_TAG, "--- Insert in mytable: ---");
                         cv.put("email",email);
                         cv.put("password",HexMd5.md5Custom(password));
-                        cv.put("flag",0);
+                        cv.put("flag",f);
+                        long rowID = db.insert("mytable", null, cv);
                         Intent intent = new Intent(this, Screen1Activity.class);
                         startActivity(intent);
                     } else{
