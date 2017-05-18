@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper{
 
+    private static String email = "";
+
     public DBHelper(Context context) {
         // конструктор суперкласса
         super(context, "myDB", null, 1);
@@ -29,5 +31,13 @@ public class DBHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public static String getEmail() {
+        return email;
+    }
+
+    public static void setEmail(String email) {
+        DBHelper.email = email;
     }
 }

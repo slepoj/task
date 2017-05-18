@@ -72,6 +72,7 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
                         Log.d(LOG_TAG, em + "  "+ c.getString(emailColIndex));
                         if (em.equals(c.getString(emailColIndex))){
                             if (HexMd5.md5Custom(pass).equals(c.getString(passwordColIndex))){
+                                DBHelper.setEmail(em);
                                 Intent intent = new Intent(this, Screen3Activity.class);
                                 startActivity(intent);
                                 error = false;
