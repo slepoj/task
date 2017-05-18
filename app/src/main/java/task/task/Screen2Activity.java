@@ -72,7 +72,7 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
                     if (password.equals(reppassword)) {
                         Log.d(LOG_TAG, "--- Insert in mytable: ---");
                         cv.put("email",email);
-                        cv.put("password",md5Custom(password));
+                        cv.put("password",HexMd5.md5Custom(password));
                         cv.put("flag",0);
                         Intent intent = new Intent(this, Screen1Activity.class);
                         startActivity(intent);
@@ -95,28 +95,4 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public static String md5Custom(String st) {
-        MessageDigest messageDigest = null;
-        byte[] digest = new byte[0];
-
-        try {
-            messageDigest = MessageDigest.getInstance("MD5");
-            messageDigest.reset();
-            messageDigest.update(st.getBytes());
-            digest = messageDigest.digest();
-        } catch (NoSuchAlgorithmException e) {
-            // тут можно обработать ошибку
-            // возникает она если в передаваемый алгоритм в getInstance(,,,) не существует
-            e.printStackTrace();
-        }
-
-        BigInteger bigInt = new BigInteger(1, digest);
-        String md5Hex = bigInt.toString(16);
-
-        while( md5Hex.length() < 32 ){
-            md5Hex = "0" + md5Hex;
-        }
-
-        return md5Hex;
-    }
 }
