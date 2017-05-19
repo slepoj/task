@@ -69,17 +69,23 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
 
         switch (v.getId()) {
             case R.id.singUp:
-                if (isEmailValid(emailUp.getText()) && email.length()>=6) {
-                    if (password.equals(reppassword) && password.length()>=4) {
-                        Log.d(LOG_TAG, "--- Insert in mytable: ---");
-                        cv.put("email",email);
-                        cv.put("password",HexMd5.md5Custom(password));
-                        cv.put("flag",f);
-                        long rowID = db.insert("mytable", null, cv);
-                        Intent intent = new Intent(this, Screen1Activity.class);
-                        startActivity(intent);
-                    } else{
-                        toast = Toast.makeText(Screen2Activity.this, "Passwords do not match", Toast.LENGTH_LONG);
+                if (isEmailValid(emailUp.getText()) && email.length()>=11) {
+                    if (!reg(email)) {
+                        if (password.equals(reppassword) && password.length() >= 4) {
+                            Log.d(LOG_TAG, "--- Insert in mytable: ---");
+                            cv.put("email", email);
+                            cv.put("password", HexMd5.md5Custom(password));
+                            cv.put("flag", f);
+                            long rowID = db.insert("mytable", null, cv);
+                            Intent intent = new Intent(this, Screen1Activity.class);
+                            startActivity(intent);
+                        } else {
+                            toast = Toast.makeText(Screen2Activity.this, "Passwords do not match", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    }
+                    else {
+                        toast = Toast.makeText(Screen2Activity.this, "This email is already registered", Toast.LENGTH_LONG);
                         toast.show();
                     }
                 } else {
@@ -95,6 +101,22 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
     }
     boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    public boolean reg (String email){
+        dbHelper = new DBHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor c = db.query("mytable", null, null, null, null, null, null);
+        if (c.moveToFirst()) {
+            int emailColIndex = c.getColumnIndex("email");
+            do {
+                if (c.getString(emailColIndex).equals(email)) {
+                    return true;
+                }
+            } while (c.moveToNext());
+        }
+        c.close();
+        return false;
     }
 
 }
