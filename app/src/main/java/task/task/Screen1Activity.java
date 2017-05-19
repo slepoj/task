@@ -29,7 +29,34 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setContentView(R.layout.screen1);
+
+        dbHelper = new DBHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // делаем запрос всех данных из таблицы mytable, получаем Cursor
+        Cursor c = db.query("mytable", null, null, null, null, null, null);
+        // ставим позицию курсора на первую строку выборки
+        // если в выборке нет строк, вернется false
+        if (c.moveToFirst()) {
+            // определяем номера столбцов по имени в выборке
+            int emailColIndex = c.getColumnIndex("email");
+            int flagColIndex = c.getColumnIndex("flag");
+            do {
+                if (c.getInt(flagColIndex) == 1) {
+                    DBHelper.setEmail(c.getString(emailColIndex));
+                    Intent intent = new Intent(this, Screen3Activity.class);
+                    startActivity(intent);
+                    break;
+                }
+                // переход на следующую строку
+                // а если следующей нет (текущая - последняя), то false - выходим из цикла
+            } while (c.moveToNext());
+        }
+        c.close();
         setContentView(R.layout.screen1);
+
+
 
         textInputLayoutEmail = (TextInputLayout) findViewById(R.id.textInputLayout6);
         email = (EditText) textInputLayoutEmail.findViewById(R.id.email);
@@ -41,7 +68,6 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
         in.setOnClickListener(this);
         up.setOnClickListener(this);
 
-        dbHelper = new DBHelper(this);
     }
 
     @Override
@@ -50,7 +76,7 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         // создаем объект для данных
-        //ContentValues cv = new ContentValues();
+        ContentValues cv = new ContentValues();
 
         String em = email.getText().toString();
         String pass = password.getText().toString();
@@ -73,6 +99,13 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
                         if (em.equals(c.getString(emailColIndex))){
                             if (HexMd5.md5Custom(pass).equals(c.getString(passwordColIndex))){
                                 DBHelper.setEmail(em);
+
+                                // подготовим значения для обновления
+                                cv.put("flag", 1);
+                                // обновляем по id
+                                int updCount = db.update("mytable", cv, "email = ?",
+                                        new String[] { c.getString(emailColIndex) });
+
                                 Intent intent = new Intent(this, Screen3Activity.class);
                                 startActivity(intent);
                                 error = false;
