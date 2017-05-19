@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Task</string>
-    <string name="screen2">screen2</string>
-    <string name="screen3">screen3</string>
+    <string name="screen2">Sign up</string>
+    <string name="screen3">Your account</string>
 </resources>
