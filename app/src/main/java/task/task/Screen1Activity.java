@@ -24,12 +24,9 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
     private EditText password;
     DBHelper dbHelper;
 
-    final String LOG_TAG = "myLogs";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.screen1);
 
         dbHelper = new DBHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -56,8 +53,6 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
         c.close();
         setContentView(R.layout.screen1);
 
-
-
         textInputLayoutEmail = (TextInputLayout) findViewById(R.id.textInputLayout6);
         email = (EditText) textInputLayoutEmail.findViewById(R.id.email);
         textInputLayoutPassword = (TextInputLayout) findViewById(R.id.textInputLayout5);
@@ -67,7 +62,6 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
 
         in.setOnClickListener(this);
         up.setOnClickListener(this);
-
     }
 
     @Override
@@ -90,22 +84,17 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
                 // если в выборке нет строк, вернется false
                 if (c.moveToFirst()) {
                     // определяем номера столбцов по имени в выборке
-                    int idColIndex = c.getColumnIndex("id");
                     int emailColIndex = c.getColumnIndex("email");
                     int passwordColIndex = c.getColumnIndex("password");
-                    int flagColIndex = c.getColumnIndex("flag");
                     do {
-                        Log.d(LOG_TAG, em + "  "+ c.getString(emailColIndex));
                         if (em.equals(c.getString(emailColIndex))){
                             if (HexMd5.md5Custom(pass).equals(c.getString(passwordColIndex))){
                                 DBHelper.setEmail(em);
-
                                 // подготовим значения для обновления
                                 cv.put("flag", 1);
-                                // обновляем по id
+                                // обновляем по email
                                 int updCount = db.update("mytable", cv, "email = ?",
                                         new String[] { c.getString(emailColIndex) });
-
                                 Intent intent = new Intent(this, Screen3Activity.class);
                                 startActivity(intent);
                                 error = false;
@@ -123,6 +112,7 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
                 } else{
                     Toast toast =Toast.makeText(Screen1Activity.this, "BD is null", Toast.LENGTH_LONG);
                     toast.show();
+                    error = false;
                 }
                 if (error){
                     Toast toast =Toast.makeText(Screen1Activity.this, "This email is not registered", Toast.LENGTH_LONG);
@@ -135,7 +125,6 @@ public class Screen1Activity extends AppCompatActivity implements View.OnClickLi
                 Intent intent2 = new Intent(this, Screen2Activity.class);
                 startActivity(intent2);
                 break;
-
         }
     }
 }

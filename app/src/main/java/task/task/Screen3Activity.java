@@ -40,11 +40,13 @@ public class Screen3Activity extends AppCompatActivity implements View.OnClickLi
             case R.id.exit:
                 // подготовим значения для обновления
                 cv.put("flag", 0);
-                // обновляем по id
+                // обновляем по email
                 int updCount = db.update("mytable", cv, "email = ?",
                         new String[] { DBHelper.getEmail() });
                 Intent intent = new Intent(this, Screen1Activity.class);
                 startActivity(intent);
+                break;
+            default:
                 break;
         }
     }

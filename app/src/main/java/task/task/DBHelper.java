@@ -19,7 +19,6 @@ public class DBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-       // Log.d(LOG_TAG, "--- onCreate database ---");
         // создаем таблицу с полями
         db.execSQL("create table mytable ("
                 + "id integer primary key autoincrement,"

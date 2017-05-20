@@ -22,7 +22,6 @@ import java.security.NoSuchAlgorithmException;
 
 public class Screen2Activity extends AppCompatActivity implements View.OnClickListener {
 
-    final String LOG_TAG = "myLogs";
     private Button singUp;
     private TextInputLayout textInputLayoutEmailUp;
     private TextInputLayout textInputLayoutPasswordUp;
@@ -50,7 +49,6 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
         singUp.setOnClickListener(this);
 
         dbHelper = new DBHelper(this);
-
     }
 
     @Override
@@ -72,7 +70,6 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
                 if (isEmailValid(emailUp.getText()) && email.length()>=11) {
                     if (!reg(email)) {
                         if (password.equals(reppassword) && password.length() >= 4) {
-                            Log.d(LOG_TAG, "--- Insert in mytable: ---");
                             cv.put("email", email);
                             cv.put("password", HexMd5.md5Custom(password));
                             cv.put("flag", f);
@@ -93,7 +90,6 @@ public class Screen2Activity extends AppCompatActivity implements View.OnClickLi
                     toast.show();
                 }
                 break;
-
             default:
                 break;
         }
